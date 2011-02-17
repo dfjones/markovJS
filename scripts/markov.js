@@ -1,8 +1,13 @@
+if (require) {
+  var _ = require("underscore");
+}
+
 var Markov = function (params) {
   this.params = params || {} ;
   // Make sure we have a defaul chain length
   this.params.chainLength = this.params.chainLength || 3;
-  this.stateTable = {}
+  this.stateTable = {},
+  this.lastGen = [];
 };
 
 Markov.prototype = {
@@ -26,7 +31,12 @@ Markov.prototype = {
 
     for (var i = 0; i < tuples.length; ++i) {
       var tuple = tuples[i];
+      var key = _.first(tuple, tuple.length-1);
+      var val = _.last(tuple);
+      this.tableInsert(key, val);
+      /*
       var table = this.stateTable;
+
       var j;
       for (j = 0; j < (tuple.length-1); ++j) {
         var t = tuple[j];
@@ -39,7 +49,58 @@ Markov.prototype = {
         }
       }
       table.push(tuple[j]);
+      */
     }
+  },
+
+  generate: function (length) {
+
+  },
+
+  generateNext: function () {
+    var next = null;
+
+    next = this.randomChoice(this.tableLookup(this.lastGen));
+
+    if (this.lastGen.length >= (this.params.chainLength-1)) {
+      this.lastGen = _.rest(this.lastGen);
+    }
+
+    this.lastGen.push(next);
+
+    return next;
+  },
+
+  tableLookup: function (key) {
+    var t = this.stateTable;
+    for (var i = 0; i < key.length; ++i) {
+      t = t[key[i]];
+    }
+
+    if (!_.isArray(t)) {
+      t = _.keys(t);
+    }
+
+    return t;
+  },
+
+  tableInsert: function (key, val) {
+    var t = this.stateTable;
+    for (var i = 0; i < key.length; ++i) {
+      if (t.hasOwnProperty(key[i])) {
+        t = t[key[i]];
+      }
+      else {
+        t = t[key[i]] = (i === key.length-1) ? [] : {};
+      }
+    }
+
+    t.push(val);
+  },
+
+  randomChoice: function (list) {
+    var i = Math.round(Math.random() * (list.length-1));
+    return list[i];
   }
   
 };
