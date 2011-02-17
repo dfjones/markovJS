@@ -34,22 +34,6 @@ Markov.prototype = {
       var key = _.first(tuple, tuple.length-1);
       var val = _.last(tuple);
       this.tableInsert(key, val);
-      /*
-      var table = this.stateTable;
-
-      var j;
-      for (j = 0; j < (tuple.length-1); ++j) {
-        var t = tuple[j];
-        if (table.hasOwnProperty(t)) {
-          table = table[t];
-        }
-        else {
-          table[t] = (j === tuple.length - 2) ? [] : {};
-          table = table[t];
-        }
-      }
-      table.push(tuple[j]);
-      */
     }
   },
 
