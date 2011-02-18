@@ -49,6 +49,17 @@ Markov.prototype = {
     return str;
   },
 
+  generateUntil: function (condition) {
+    var generated = [];
+
+    while(!condition(generated)) {
+      generated.push(this.generateNext());
+    }
+
+    var str = generated.join(this.params.genSeparator);
+    return str;
+  },
+
   generateNext: function () {
     var next = null;
 
