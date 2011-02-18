@@ -5,7 +5,7 @@ if (require) {
 var Markov = function (params) {
   this.params = params || {} ;
   // Make sure we have a defaul chain length
-  this.params.chainLength = this.params.chainLength || 3;
+  this.params.chainLength = this.params.chainLength || 2;
   this.stateTable = {},
   this.lastGen = [];
 };
@@ -15,9 +15,9 @@ Markov.prototype = {
   createTuples: function (tokens) {
     var cl = this.params.chainLength;
     var tuples = [];
-    for (var i = 0; i < (tokens.length - (cl-1)); ++i) {
+    for (var i = 0; i < (tokens.length - cl); ++i) {
       var tuple = [];
-      for (var j = 0; j < cl; ++j) {
+      for (var j = 0; j <= cl; ++j) {
         tuple.push(tokens[i+j]);
       }
       tuples.push(tuple);
@@ -46,7 +46,7 @@ Markov.prototype = {
 
     next = this.randomChoice(this.tableLookup(this.lastGen));
 
-    if (this.lastGen.length >= (this.params.chainLength-1)) {
+    if (this.lastGen.length >= (this.params.chainLength)) {
       this.lastGen = _.rest(this.lastGen);
     }
 
