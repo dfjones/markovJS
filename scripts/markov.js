@@ -6,6 +6,7 @@ var Markov = function (params) {
   this.params = params || {} ;
   // Make sure we have a defaul chain length
   this.params.chainLength = this.params.chainLength || 2;
+  this.params.genSeparator = this.params.genSeparator || " ";
   this.stateTable = {},
   this.lastGen = [];
 };
@@ -38,7 +39,14 @@ Markov.prototype = {
   },
 
   generate: function (length) {
+    var generated = [];
 
+    for (var i = 0; i < length; ++i) {
+      generated.push(this.generateNext());
+    }
+
+    var str = generated.join(this.params.genSeparator);
+    return str;
   },
 
   generateNext: function () {
